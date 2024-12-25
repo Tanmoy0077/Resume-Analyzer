@@ -1,8 +1,6 @@
 import streamlit as st
 from pdfminer.high_level import extract_text
 from utils import *
-import pandas as pd
-import plotly.express as px
 from plotly.subplots import make_subplots
 import plotly.graph_objects as go
 
