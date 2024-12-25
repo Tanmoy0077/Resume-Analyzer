@@ -21,8 +21,8 @@ if btn:
    elif not jd:
       st.error("Please paste the job description and press Ctrl+Enter")
    else:
-      text = extract_text(file)
-      resume_skills = get_skills(text.strip())
+      text = extract_text(file).strip()
+      resume_skills = get_skills(text)
       job_skills = get_skills(jd.strip())
       fig = make_subplots(rows=1, cols=2,specs=[[{'type':'domain'}, {'type':'domain'}]], subplot_titles=("Skills in Resume", "Skills in Job Description"))
 
@@ -39,13 +39,40 @@ if btn:
 
       matched_skills = set(job_skills['Skill']).intersection(set(resume_skills["Skill"]))
       missing_skills = set(job_skills['Skill']) - set(resume_skills["Skill"])
+      action_verbs = get_action_verbs(text)
+      buzzwords = get_buzzwords(text)
+
+      col1, col2, col3 = st.columns(3)
+
       match_pct = (len(matched_skills)/len(set(job_skills["Skill"])))*100
-      st.metric(label="Skill Match Percentage", value=f"{match_pct}%")
+
+      col1.metric(label="Action Verbs", value=f"{len(action_verbs)}")      
+      col2.metric(label="Buzzwords", value=f"{len(buzzwords)}") 
+      col3.metric(label="Skill Match Percentage", value=f"{match_pct:.2f}%")
       
-      if(len(missing_skills) > 0):
-         st.subheader("Missing Skills")
+      if(len(missing_skills) > 0):  
+         col3.subheader("Missing Skills")
          for item in missing_skills:
-               st.markdown(f"""- {item}""")
+               col3.markdown(f"""- {item}""")
+         col3.text("Try adding these skills in your resume")
       else:
-         st.text("Great Job! your skills perfectly align with the job description")
+         col3.text("Great Job! your skills perfectly align with the job description")
+      
+      if(len(buzzwords) > 0):
+         col2.subheader("Buzzwords")
+         for item in buzzwords:
+               col2.markdown(f"""- {item}""")
+         col2.text("Try removing these words from your resume")
+      else:
+         col2.text("Great Job! your resume doesn't contain any buzzwords")
+
+      if(len(action_verbs) > 0):
+         col1.subheader("Action Verbs")
+         for item in action_verbs:
+               col1.markdown(f"""- {item}""")
+         
+      else:
+         col1.text("Try adding action verbs in your resume to showcase your responsibilites")
+      
+
 

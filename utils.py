@@ -5,6 +5,13 @@ import pandas as pd
 
 nlp = spacy.load("spacy_model")
 
+with open("buzzwords.txt") as file:
+    content = file.read().strip().split("\n")
+    buzzwords = set(content)
+
+with open("action_verbs.txt") as file:
+    content = file.read().strip().split("\n")
+    action_verbs = set(content)
 
 
 def get_skills(text: str):
@@ -18,7 +25,18 @@ def get_skills(text: str):
     return pd.DataFrame(data, columns=["ID", "Skill", "Frequency"])
 
 def get_buzzwords(text: str):
-    pass
+    words = set()
+    for word in buzzwords:
+        if word.lower() in text.lower():
+            words.add(word)
+    return words
+
+def get_action_verbs(text: str):
+    words = set()
+    for word in action_verbs:
+        if word.lower() in text.lower():
+            words.add(word)
+    return words
 
 # if __name__ == "__main__":
 #     text = """We are seeking a dedicated Human Resources Generalist to manage all aspects of the employee lifecycle, from recruitment and onboarding to performance management and employee relations, ensuring a positive employee experience while upholding compliance with employment laws.
